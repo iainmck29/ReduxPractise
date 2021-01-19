@@ -249,6 +249,9 @@
                     {props.items.map((item) => (
                         <li key={item.id}>
                             <span>{item.name}</span>
+                            <button onClick={props.remove(item)}>
+                                X
+                            </button>
                         </li>
                     ))}
                 </ul>
@@ -267,6 +270,10 @@
                 }))
             }
 
+            removeItem = (todo) => {
+                this.props.store.dispatch(removeTodoAction(todo.id))
+            }
+
             render() {
                 return (
                     <div>
@@ -276,7 +283,7 @@
                             ref={(input) => this.input = input} />
                         <button onClick={this.addItem}>Add ToDo</button>
 
-                        <List items={this.props.todos} />
+                        <List remove={this.removeItem} items={this.props.todos} />
                     </div>
                 )
             }
@@ -294,6 +301,10 @@
                 }))
             }
 
+            removeItem = (goal) => {
+                this.props.store.dispatch(removeGoalAction(goal.id))
+            }
+
             render() {
                 return (
                     <div>
@@ -303,7 +314,7 @@
                             ref={(input) => this.input = input} />
                         <button onClick={this.addItem}>Add Goal</button>
 
-                        <List items={this.props.goals} />
+                        <List remove={this.removeItem} items={this.props.goals} />
                     </div>
                 )
             }
@@ -312,12 +323,13 @@
         class App extends React.Component {
             componentDidMount() {
                 const { store } = this.props
-                const { todos, goals } = store.getState()
-                console.log(todos)
+
 
                 store.subscribe(() => this.forceUpdate())
             }
             render() {
+                const { store } = this.props
+                const { todos, goals } = store.getState()
                 return (
                     <div>
                         <ToDos todos={todos} store={this.props.store} />
